@@ -1,0 +1,2 @@
+D:\Projects\my-fable-project\obj\Debug\net9.0\my-fable-project.AssemblyInfoInputs.cache
+D:\Projects\my-fable-project\obj\Debug\net9.0\my-fable-project.AssemblyInfo.fs

@@ -1,0 +1,27 @@
+{
+  "name": "my-fable-project",
+  "version": "1.0.0",
+  "main": "Program.fs.js",
+  "type": "module",
+  "scripts": {
+    "dev": "dotnet fable watch --verbose --run npx vite",
+    "build": "dotnet fable --outDir dist && cp index.html dist/ && npx vite build",
+    "predeploy": "npm run build",
+    "deploy": "npx gh-pages -d dist"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "gh-pages": "^6.3.0",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^4.1.5",
+    "vite": "^6.3.5",
+    "vite-plugin-gh-pages": "^1.0.1"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.1.5"
+  }
+}

@@ -1,0 +1,7 @@
+D:\Projects\my-fable-project\bin\Release\net9.0\my-fable-project.fable-temp.deps.json
+D:\Projects\my-fable-project\bin\Release\net9.0\my-fable-project.fable-temp.runtimeconfig.json
+D:\Projects\my-fable-project\obj\Release\net9.0\my-fable-project.fable-temp.GeneratedMSBuildEditorConfig.editorconfig
+D:\Projects\my-fable-project\obj\Release\net9.0\my-fable-project.fable-temp.AssemblyInfoInputs.cache
+D:\Projects\my-fable-project\obj\Release\net9.0\my-fable-project.fable-temp.AssemblyInfo.cs
+D:\Projects\my-fable-project\obj\Release\net9.0\my-fable.CDD2A9D1.Up2Date
+D:\Projects\my-fable-project\obj\Release\net9.0\my-fable-project.fable-temp.genruntimeconfig.cache

@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>my_fable_project</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+  <Compile Include="src/Components/Modal.fs" />
+  <Compile Include="src/Components/Canvas.fs" />
+  <Compile Include="src/Components/ControlPanel.fs" />
+  <Compile Include="src/Components/Header.fs" />
+  <Compile Include="src/Components/Visualizer.fs" />
+  <Compile Include="src/Program.fs" />
+</ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Fable.Browser.Dom" Version="2.19.0" />
+    <PackageReference Include="Fable.Core" Version="4.5.0" />
+    <PackageReference Include="Fable.Node" Version="1.5.0" />
+    <PackageReference Include="Fable.Fetch" Version="2.1.0" />
+    <PackageReference Include="Fable.SimpleHttp" Version="3.0.0" />
+    <PackageReference Include="Thoth.Json" Version="10.4.1" />
+    <PackageReference Include="Thoth.Json.Net" Version="4.0.0" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <RestoreSuccess Condition=" '$(RestoreSuccess)' == '' ">True</RestoreSuccess>
+    <RestoreTool Condition=" '$(RestoreTool)' == '' ">NuGet</RestoreTool>
+    <ProjectAssetsFile Condition=" '$(ProjectAssetsFile)' == '' ">$(MSBuildThisFileDirectory)project.assets.json</ProjectAssetsFile>
+    <NuGetPackageRoot Condition=" '$(NuGetPackageRoot)' == '' ">$(UserProfile)\.nuget\packages\</NuGetPackageRoot>
+    <NuGetPackageFolders Condition=" '$(NuGetPackageFolders)' == '' ">C:\Users\drugo\.nuget\packages\</NuGetPackageFolders>
+    <NuGetProjectStyle Condition=" '$(NuGetProjectStyle)' == '' ">PackageReference</NuGetProjectStyle>
+    <NuGetToolVersion Condition=" '$(NuGetToolVersion)' == '' ">6.13.2</NuGetToolVersion>
+  </PropertyGroup>
+  <ItemGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <SourceRoot Include="C:\Users\drugo\.nuget\packages\" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <Content Include="$(NuGetPackageRoot)fable.core\4.5.0\contentFiles\any\netstandard2.0\CHANGELOG.md" Condition="Exists('$(NuGetPackageRoot)fable.core\4.5.0\contentFiles\any\netstandard2.0\CHANGELOG.md')">
+      <NuGetPackageId>Fable.Core</NuGetPackageId>
+      <NuGetPackageVersion>4.5.0</NuGetPackageVersion>
+      <NuGetItemType>Content</NuGetItemType>
+      <Pack>false</Pack>
+      <Private>False</Private>
+      <Link>CHANGELOG.md</Link>
+    </Content>
+  </ItemGroup>
+  <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <PkgFSharp_Core Condition=" '$(PkgFSharp_Core)' == '' ">C:\Users\drugo\.nuget\packages\fsharp.core\9.0.202</PkgFSharp_Core>
+    <PkgFable_Core Condition=" '$(PkgFable_Core)' == '' ">C:\Users\drugo\.nuget\packages\fable.core\4.5.0</PkgFable_Core>
+    <PkgThoth_Json_Net Condition=" '$(PkgThoth_Json_Net)' == '' ">C:\Users\drugo\.nuget\packages\thoth.json.net\4.0.0</PkgThoth_Json_Net>
+    <PkgThoth_Json Condition=" '$(PkgThoth_Json)' == '' ">C:\Users\drugo\.nuget\packages\thoth.json\10.4.1</PkgThoth_Json>
+    <PkgFable_Browser_Dom Condition=" '$(PkgFable_Browser_Dom)' == '' ">C:\Users\drugo\.nuget\packages\fable.browser.dom\2.19.0</PkgFable_Browser_Dom>
+    <PkgFable_SimpleHttp Condition=" '$(PkgFable_SimpleHttp)' == '' ">C:\Users\drugo\.nuget\packages\fable.simplehttp\3.0.0</PkgFable_SimpleHttp>
+    <PkgFable_Node Condition=" '$(PkgFable_Node)' == '' ">C:\Users\drugo\.nuget\packages\fable.node\1.5.0</PkgFable_Node>
+    <PkgFable_Fetch Condition=" '$(PkgFable_Fetch)' == '' ">C:\Users\drugo\.nuget\packages\fable.fetch\2.1.0</PkgFable_Fetch>
+  </PropertyGroup>
+</Project>
