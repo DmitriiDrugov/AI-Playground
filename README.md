@@ -1,6 +1,8 @@
 # AI Playground: Perceptron & Maze Solver 🎓🤖
 
 This interactive project combines two classic AI visualizations in a single F# + Fable application:
+
+
 TRY-LIVE link - https://dmitriidrugov.github.io/AI-Playground/
 
 ## 🔵 Perceptron Mode
