@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("my-fable-project.fable-temp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+907642f154b8952f8e11b34cca47dc49eb8afae5")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0505b0b7e3029b1eb461ac8f9a26d2d177afd7df")]
 [assembly: System.Reflection.AssemblyProductAttribute("my-fable-project.fable-temp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("my-fable-project.fable-temp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

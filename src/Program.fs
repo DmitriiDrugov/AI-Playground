@@ -223,35 +223,10 @@ let generateMazeWithLongestPath rows cols : int[][] * (int * int) * (int * int) 
 
     dfs 0 0
 
-    let distances = Array.init rows (fun _ -> Array.create cols -1)
-    let q = System.Collections.Generic.Queue()
-    q.Enqueue((0, 0))
-    distances.[0].[0] <- 0
-    let mutable farthest = (0, 0)
-
-    while q.Count > 0 do
-        let (r, c) = q.Dequeue()
-
-        for i in 0..3 do
-            let dr, dc = directions.[i]
-            let nr, nc = r + dr, c + dc
-
-            if
-                nr >= 0
-                && nc >= 0
-                && nr < rows
-                && nc < cols
-                && not grid.[r].[c].walls.[i]
-                && distances.[nr].[nc] = -1
-            then
-                distances.[nr].[nc] <- distances.[r].[c] + 1
-                q.Enqueue((nr, nc))
-
-                if distances.[nr].[nc] > distances.[fst farthest].[snd farthest] then
-                    farthest <- (nr, nc)
-
-    let mazeSize = rows * 2 + 1
-    let maze = Array.init mazeSize (fun _ -> Array.create mazeSize 1)
+    // Изменяем создание лабиринта с учетом разницы между строками и столбцами:
+    let mazeRows = rows * 2 + 1
+    let mazeCols = cols * 2 + 1
+    let maze = Array.init mazeRows (fun _ -> Array.create mazeCols 1)
 
     for r in 0 .. rows - 1 do
         for c in 0 .. cols - 1 do
@@ -271,17 +246,75 @@ let generateMazeWithLongestPath rows cols : int[][] * (int * int) * (int * int) 
             if not cell.walls.[3] then
                 maze.[mr].[mc - 1] <- 0
 
-    let entrance = (mazeSize - 2, 1)
-    let (rExit, cExit) = farthest
-    let exit = (rExit * 2 + 1, cExit * 2 + 1)
+    // Вход всегда фиксирован внутри лабиринта
+    let entrance = (1, 1)
     maze.[fst entrance].[snd entrance] <- 0
+
+    // Выбираем выход – исключительно из внутренних проходимых ячеек
+    let passableCells =
+        [ for r in 2 .. mazeRows - 3 do
+              for c in 2 .. mazeCols - 3 do
+                  if maze.[r].[c] = 0 && (r, c) <> entrance then
+                      yield (r, c) ]
+
+    let exit =
+        if passableCells.Length > 0 then
+            passableCells.[rand.Next passableCells.Length]
+        else
+            entrance
+
     maze.[fst exit].[snd exit] <- 0
     (maze, entrance, exit)
 
-let m, start, goal = generateMazeWithLongestPath 20 35
+
+
+
+
+let rec generateSolvableMaze rows cols =
+    let (m, start, goal) = generateMazeWithLongestPath rows cols
+
+    let isSolvable =
+        let visited = Array.init m.Length (fun _ -> Array.create m.[0].Length false)
+        let q = System.Collections.Generic.Queue()
+        q.Enqueue(start)
+        visited.[fst start].[snd start] <- true
+
+        let directions = [| (0, -1); (-1, 0); (0, 1); (1, 0) |]
+
+        let mutable found = false
+
+        while q.Count > 0 && not found do
+            let (r, c) = q.Dequeue()
+
+            for (dr, dc) in directions do
+                let nr, nc = r + dr, c + dc
+
+                if
+                    nr >= 0
+                    && nc >= 0
+                    && nr < m.Length
+                    && nc < m.[0].Length
+                    && m.[nr].[nc] = 0
+                    && not visited.[nr].[nc]
+                then
+                    visited.[nr].[nc] <- true
+                    q.Enqueue(nr, nc)
+
+                    if (nr, nc) = goal then
+                        found <- true
+
+        found
+
+    if isSolvable then
+        (m, start, goal)
+    else
+        generateSolvableMaze rows cols
+
+let m, start, goal = generateSolvableMaze 8 14
 maze <- m
 startPos <- start
 goalPos <- goal
+
 
 
 let drawMaze () =
@@ -289,10 +322,6 @@ let drawMaze () =
     let ctx = canvas.getContext_2d ()
     let rows, cols = maze.Length, maze.[0].Length
     let cellSize = float canvas.width / float cols
-
-
-    // Пример лабиринта: 0 — пусто, 1 — стена
-
 
     // Очистим всё
     ctx.clearRect (0.0, 0.0, canvas.width, canvas.height)
@@ -303,20 +332,45 @@ let drawMaze () =
             let x = float col * cellSize
             let y = float row * cellSize
 
-            if maze.[row].[col] = 1 then
-                ctx.fillStyle <- !!"#000000"
-            else
-                ctx.fillStyle <- !!"#ffffff"
-
+            ctx.fillStyle <- if maze.[row].[col] = 1 then !!"#000000" else !!"#ffffff"
             ctx.fillRect (x, y, cellSize, cellSize)
             ctx.strokeStyle <- !!"#cccccc"
             ctx.strokeRect (x, y, cellSize, cellSize)
 
-    // Стартовая позиция агента
-    ctx.fillStyle <- !!"limegreen"
-    ctx.beginPath ()
-    ctx.arc (cellSize / 2.0, cellSize / 2.0, cellSize / 3.0, 0.0, 2.0 * System.Math.PI)
-    ctx.fill ()
+    let gx, gy = goalPos
+
+    if gx >= 0 && gx < rows && gy >= 0 && gy < cols && maze.[gx].[gy] = 0 then
+        ctx.fillStyle <- !!"red"
+        ctx.beginPath ()
+
+        ctx.arc (
+            float gy * cellSize + cellSize / 2.0,
+            float gx * cellSize + cellSize / 2.0,
+            cellSize / 3.0,
+            0.0,
+            2.0 * System.Math.PI
+        )
+
+        ctx.fill ()
+
+    // 🟢 Нарисуем вход (startPos)
+    let sx, sy = startPos
+
+    if sx >= 0 && sx < rows && sy >= 0 && sy < cols && maze.[sx].[sy] = 0 then
+        ctx.fillStyle <- !!"limegreen"
+        ctx.beginPath ()
+
+        ctx.arc (
+            float sy * cellSize + cellSize / 2.0,
+            float sx * cellSize + cellSize / 2.0,
+            cellSize / 3.0,
+            0.0,
+            2.0 * System.Math.PI
+        )
+
+        ctx.fill ()
+
+
 
 
 let animatePath (canvas: HTMLCanvasElement) (path: (int * int) list) =
@@ -482,7 +536,7 @@ let randomizeWeights () =
 
 let resetPoints () =
     if isMazeMode then
-        let m, start, goal = generateMazeWithLongestPath 20 35
+        let m, start, goal = generateSolvableMaze 8 14
         maze <- m
         startPos <- start
         goalPos <- goal
@@ -492,6 +546,8 @@ let resetPoints () =
         drawPoints ()
         updateWeightsDisplay ()
         updateConfusionMatrix ()
+
+
 
 
 let onBtn id action =

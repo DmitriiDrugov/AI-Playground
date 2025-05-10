@@ -10,7 +10,7 @@ open System.Reflection
 [<assembly: System.Reflection.AssemblyCompanyAttribute("my-fable-project")>]
 [<assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")>]
 [<assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")>]
-[<assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8978829d063bfd9617601900bd7624adbc7f7a19")>]
+[<assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0505b0b7e3029b1eb461ac8f9a26d2d177afd7df")>]
 [<assembly: System.Reflection.AssemblyProductAttribute("my-fable-project")>]
 [<assembly: System.Reflection.AssemblyTitleAttribute("my-fable-project")>]
 [<assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")>]
