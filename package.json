@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "dotnet fable watch --verbose --run npx vite",
-    "build": "dotnet fable --outDir dist && cp index.html dist/ && npx vite build",
+    "build": "dotnet fable && npx vite build",
     "predeploy": "npm run build",
     "deploy": "npx gh-pages -d dist"
   },

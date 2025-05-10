@@ -4,7 +4,7 @@ import { equalArrays, comparePrimitives, disposeSafe, getEnumerator, defaultOf, 
 import { cons, singleton, item as item_1, length, empty } from "../fable_modules/fable-library-js.4.25.0/List.js";
 import { parse } from "../fable_modules/fable-library-js.4.25.0/Double.js";
 import { some } from "../fable_modules/fable-library-js.4.25.0/Option.js";
-import { fill, mapIndexed, sortBy, initialize, item } from "../fable_modules/fable-library-js.4.25.0/Array.js";
+import { fill, sortBy, mapIndexed, initialize, item } from "../fable_modules/fable-library-js.4.25.0/Array.js";
 import { printf, toText } from "../fable_modules/fable-library-js.4.25.0/String.js";
 import { rangeDouble } from "../fable_modules/fable-library-js.4.25.0/Range.js";
 import { nonSeeded } from "../fable_modules/fable-library-js.4.25.0/Random.js";
@@ -79,8 +79,7 @@ export function computeConfusionMatrix() {
         while (enumerator["System.Collections.IEnumerator.MoveNext"]()) {
             const p = enumerator["System.Collections.Generic.IEnumerator`1.get_Current"]();
             const input = new Float64Array([p.X, p.Y]);
-            const sum = ((item(0, input) * item(0, weights())) + (item(1, input) * item(1, weights()))) + bias();
-            const predicted = ((sum >= 0) ? 1 : 0) | 0;
+            const predicted = (((((item(0, input) * item(0, weights())) + (item(1, input) * item(1, weights()))) + bias()) >= 0) ? 1 : 0) | 0;
             const matchValue_4 = p.Class | 0;
             let matchResult;
             switch (matchValue_4) {
@@ -147,10 +146,6 @@ export function updateConfusionMatrix() {
     const container = document.getElementById("metrics-container");
     if (!equals(container, defaultOf())) {
         const patternInput = computeConfusionMatrix();
-        const tp = patternInput[0] | 0;
-        const tn = patternInput[3] | 0;
-        const fp = patternInput[1] | 0;
-        const fn = patternInput[2] | 0;
         const matrixHtml = `
             <h2 class="font-semibold mb-2">Confusion Matrix</h2>
             <table class="table-auto text-sm text-center w-full border">
@@ -164,13 +159,13 @@ export function updateConfusionMatrix() {
                 <tbody>
                     <tr>
                         <th>Actual 0</th>
-                        <td class="border">TN<br><strong>${tn}</strong></td>
-                        <td class="border">FP<br><strong>${fp}</strong></td>
+                        <td class="border">TN<br><strong>${patternInput[3]}</strong></td>
+                        <td class="border">FP<br><strong>${patternInput[1]}</strong></td>
                     </tr>
                     <tr>
                         <th>Actual 1</th>
-                        <td class="border">FN<br><strong>${fn}</strong></td>
-                        <td class="border">TP<br><strong>${tp}</strong></td>
+                        <td class="border">FN<br><strong>${patternInput[2]}</strong></td>
+                        <td class="border">TP<br><strong>${patternInput[0]}</strong></td>
                     </tr>
                 </tbody>
             </table>
@@ -205,25 +200,14 @@ export function drawDecisionBoundary() {
     const ctx = canvas.getContext('2d');
     const matchValue = item(0, weights());
     const w1 = item(1, weights());
-    const w0 = matchValue;
     if (w1 !== 0) {
-        const yFromX = (x) => ((-(w0 / w1) * x) - (bias() / w1));
-        const toCanvas = (tupledArg) => {
-            const x_1 = tupledArg[0];
-            const y = tupledArg[1];
-            const px = ((x_1 + 1) / 2) * canvas.width;
-            const py = (1 - ((y + 1) / 2)) * canvas.height;
-            return [px, py];
-        };
+        const yFromX = (x) => ((-(matchValue / w1) * x) - (bias() / w1));
+        const toCanvas = (tupledArg) => [((tupledArg[0] + 1) / 2) * canvas.width, (1 - ((tupledArg[1] + 1) / 2)) * canvas.height];
         const patternInput_1 = toCanvas([-1, yFromX(-1)]);
-        const py1 = patternInput_1[1];
-        const px1 = patternInput_1[0];
         const patternInput_2 = toCanvas([1, yFromX(1)]);
-        const py2 = patternInput_2[1];
-        const px2 = patternInput_2[0];
         ctx.beginPath();
-        ctx.moveTo(px1, py1);
-        ctx.lineTo(px2, py2);
+        ctx.moveTo(patternInput_1[0], patternInput_1[1]);
+        ctx.lineTo(patternInput_2[0], patternInput_2[1]);
         ctx.strokeStyle = "black";
         ctx.lineWidth = 2;
         ctx.stroke();
@@ -236,22 +220,20 @@ export function drawPoints() {
     const ctx = canvas.getContext('2d');
     const w = ~~canvas.width | 0;
     const h = ~~canvas.height | 0;
-    const gridSize = 4;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    const enumerator = getEnumerator(rangeDouble(0, gridSize, w - 1));
+    const enumerator = getEnumerator(rangeDouble(0, 4, w - 1));
     try {
         while (enumerator["System.Collections.IEnumerator.MoveNext"]()) {
             const i = enumerator["System.Collections.Generic.IEnumerator`1.get_Current"]() | 0;
-            const enumerator_1 = getEnumerator(rangeDouble(0, gridSize, h - 1));
+            const enumerator_1 = getEnumerator(rangeDouble(0, 4, h - 1));
             try {
                 while (enumerator_1["System.Collections.IEnumerator.MoveNext"]()) {
                     const j = enumerator_1["System.Collections.Generic.IEnumerator`1.get_Current"]() | 0;
-                    const x = ((i / w) * 2) - 1;
                     const y = -(((j / h) * 2) - 1);
-                    const sum = ((x * item(0, weights())) + (y * item(1, weights()))) + bias();
+                    const sum = (((((i / w) * 2) - 1) * item(0, weights())) + (y * item(1, weights()))) + bias();
                     const prob = 1 / (1 + Math.exp(-sum));
                     ctx.fillStyle = ((prob >= 0.5) ? toText(printf("rgba(220,38,38,%.2f)"))(prob) : ((arg_1 = (1 - prob), toText(printf("rgba(37,99,235,%.2f)"))(arg_1))));
-                    ctx.fillRect(i, j, gridSize, gridSize);
+                    ctx.fillRect(i, j, 4, 4);
                 }
             }
             finally {
@@ -297,23 +279,16 @@ export function generateMazeWithLongestPath(rows, cols) {
     const grid = initialize(rows, (_arg) => initialize(cols, (_arg_1) => (new Cell(false, [true, true, true, true]))));
     const directions = [[0, -1], [-1, 0], [0, 1], [1, 0]];
     const wallPairs = [[3, 1], [0, 2], [1, 3], [2, 0]];
-    const shuffledDirections = () => sortBy((_arg_2) => rand.Next0(), directions, {
-        Compare: comparePrimitives,
-    });
     const dfs = (r, c) => {
         item(c, item(r, grid)).visited = true;
-        const arr = mapIndexed((i, tupledArg) => {
-            const dr = tupledArg[0] | 0;
-            const dc = tupledArg[1] | 0;
-            return [i, dr, dc];
-        }, shuffledDirections());
+        const arr = mapIndexed((i, tupledArg) => [i, tupledArg[0], tupledArg[1]], sortBy((_arg_2) => rand.Next0(), directions, {
+            Compare: comparePrimitives,
+        }));
         for (let idx = 0; idx <= (arr.length - 1); idx++) {
             const forLoopVar = item(idx, arr);
             const i_1 = forLoopVar[0] | 0;
-            const dr_1 = forLoopVar[1] | 0;
-            const dc_1 = forLoopVar[2] | 0;
-            const nr = (r + dr_1) | 0;
-            const nc = (c + dc_1) | 0;
+            const nr = (r + forLoopVar[1]) | 0;
+            const nc = (c + forLoopVar[2]) | 0;
             if (((((nr >= 0) && (nc >= 0)) && (nr < rows)) && (nc < cols)) && !item(nc, item(nr, grid)).visited) {
                 const oppositeWall = item(i_1, wallPairs);
                 item(c, item(r, grid)).walls[i_1] = false;
@@ -334,10 +309,8 @@ export function generateMazeWithLongestPath(rows, cols) {
         const c_1 = patternInput_1[1] | 0;
         for (let i_2 = 0; i_2 <= 3; i_2++) {
             const patternInput_2 = item(i_2, directions);
-            const dr_2 = patternInput_2[0] | 0;
-            const dc_2 = patternInput_2[1] | 0;
-            const nr_1 = (r_1 + dr_2) | 0;
-            const nc_1 = (c_1 + dc_2) | 0;
+            const nr_1 = (r_1 + patternInput_2[0]) | 0;
+            const nc_1 = (c_1 + patternInput_2[1]) | 0;
             if ((((((nr_1 >= 0) && (nc_1 >= 0)) && (nr_1 < rows)) && (nc_1 < cols)) && !item(i_2, item(c_1, item(r_1, grid)).walls)) && (item(nc_1, item(nr_1, distances)) === -1)) {
                 item(nr_1, distances)[nc_1] = ((item(c_1, item(r_1, distances)) + 1) | 0);
                 Queue$1__Enqueue_2B595(q, [nr_1, nc_1]);
@@ -370,9 +343,7 @@ export function generateMazeWithLongestPath(rows, cols) {
         }
     }
     const entrance = [mazeSize - 2, 1];
-    const rExit = farthest[0] | 0;
-    const cExit = farthest[1] | 0;
-    const exit = [(rExit * 2) + 1, (cExit * 2) + 1];
+    const exit = [(farthest[0] * 2) + 1, (farthest[1] * 2) + 1];
     item(entrance[0], maze_1)[entrance[1]] = 0;
     item(exit[0], maze_1)[exit[1]] = 0;
     return [maze_1, entrance, exit];
@@ -395,11 +366,11 @@ goalPos(goal);
 export function drawMaze() {
     const canvas = document.getElementById("maze-canvas");
     const ctx = canvas.getContext('2d');
-    const rows = maze().length | 0;
+    const matchValue = maze().length | 0;
     const cols = item(0, maze()).length | 0;
     const cellSize = canvas.width / cols;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for (let row = 0; row <= (rows - 1); row++) {
+    for (let row = 0; row <= (matchValue - 1); row++) {
         for (let col = 0; col <= (cols - 1); col++) {
             const x = col * cellSize;
             const y = row * cellSize;
@@ -426,10 +397,8 @@ export function animatePath(canvas, path) {
     const loop = (index) => {
         if (index < length(path)) {
             const patternInput = item_1(index, path);
-            const r = patternInput[0] | 0;
-            const c = patternInput[1] | 0;
-            const x = (c * cellSize) + (cellSize / 2);
-            const y = (r * cellSize) + (cellSize / 2);
+            const x = (patternInput[1] * cellSize) + (cellSize / 2);
+            const y = (patternInput[0] * cellSize) + (cellSize / 2);
             ctx.fillStyle = "limegreen";
             ctx.beginPath();
             ctx.arc(x, y, cellSize / 4, 0, 2 * 3.141592653589793);
@@ -461,21 +430,18 @@ export function solveMaze() {
         item(start_1[0], visited)[start_1[1]] = true;
         const directions = [[0, -1], [-1, 0], [0, 1], [1, 0]];
         const rand = nonSeeded();
-        const shuffledDirections = () => sortBy((_arg_2) => rand.Next0(), directions, {
-            Compare: comparePrimitives,
-        });
         let found = false;
         while ((Queue$1__get_Count(q) > 0) && !found) {
             const patternInput_1 = Queue$1__Dequeue(q);
             const r = patternInput_1[0] | 0;
             const c = patternInput_1[1] | 0;
-            const arr = shuffledDirections();
+            const arr = sortBy((_arg_2) => rand.Next0(), directions, {
+                Compare: comparePrimitives,
+            });
             for (let idx = 0; idx <= (arr.length - 1); idx++) {
                 const forLoopVar = item(idx, arr);
-                const dr = forLoopVar[0] | 0;
-                const dc = forLoopVar[1] | 0;
-                const nr = (r + dr) | 0;
-                const nc = (c + dc) | 0;
+                const nr = (r + forLoopVar[0]) | 0;
+                const nc = (c + forLoopVar[1]) | 0;
                 if ((((((nr >= 0) && (nc >= 0)) && (nr < rows)) && (nc < cols)) && (item(nc, item(nr, maze())) === 0)) && !item(nc, item(nr, visited))) {
                     item(nr, visited)[nc] = true;
                     item(nr, parent)[nc] = [r, c];
@@ -527,10 +493,7 @@ export function trainUntilPerfect(epoch) {
         while (enumerator["System.Collections.IEnumerator.MoveNext"]()) {
             const p = enumerator["System.Collections.Generic.IEnumerator`1.get_Current"]();
             const input = new Float64Array([p.X, p.Y]);
-            const target = p.Class;
-            const sum = ((item(0, input) * item(0, weights())) + (item(1, input) * item(1, weights()))) + bias();
-            const output = (sum >= 0) ? 1 : 0;
-            const error = target - output;
+            const error = p.Class - (((((item(0, input) * item(0, weights())) + (item(1, input) * item(1, weights()))) + bias()) >= 0) ? 1 : 0);
             if (error !== 0) {
                 hasError = true;
                 const lr = learningRate();
@@ -583,12 +546,9 @@ export function randomizeWeights() {
 export function resetPoints() {
     if (isMazeMode()) {
         const patternInput = generateMazeWithLongestPath(20, 35);
-        const start_1 = patternInput[1];
-        const m_1 = patternInput[0];
-        const goal_1 = patternInput[2];
-        maze(m_1);
-        startPos(start_1);
-        goalPos(goal_1);
+        maze(patternInput[0]);
+        startPos(patternInput[1]);
+        goalPos(patternInput[2]);
         drawMaze();
     }
     else {
