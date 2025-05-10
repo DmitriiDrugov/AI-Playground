@@ -11,32 +11,29 @@ jobs:
 
     steps:
       - name: 📥 Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: ⚙️ Setup .NET
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
 
       - name: ⚙️ Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '18'
 
-      - name: 📦 Install dependencies
-        run: npm install
+      - name: 📦 Install npm dependencies
+        run: npm ci
 
-      - name: 🔧 Ensure Vite is Installed
-        run: npm install vite
-
-      - name: 🛠 Restore Fable tool
+      - name: 🛠️ Restore Fable Tool
         run: dotnet tool restore
 
-      - name: 🧪 Build Project
+      - name: 🧱 Build Project
         run: npm run build
 
       - name: 🚀 Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
