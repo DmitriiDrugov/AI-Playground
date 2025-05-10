@@ -23,13 +23,13 @@ jobs:
         with:
           node-version: '18'
 
-      - name: 📦 Install npm dependencies
+      - name: 📦 Install dependencies
         run: npm ci
 
-      - name: 🛠️ Restore Fable Tool
+      - name: 🛠️ Restore Fable
         run: dotnet tool restore
 
-      - name: 🧱 Build Project
+      - name: 🧱 Build project
         run: npm run build
 
       - name: 🚀 Deploy to GitHub Pages
